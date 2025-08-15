@@ -1,9 +1,12 @@
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
-import { Menu, X, Users, Phone, FileText } from 'lucide-react';
+import { useAuth } from '@/hooks/useAuth';
+import { Menu, X, Users, Phone, FileText, LogOut } from 'lucide-react';
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const { user, signOut } = useAuth();
 
   const navigation = [
     { name: 'About Us', href: '#about' },
@@ -43,14 +46,30 @@ const Header = () => {
 
           {/* CTA Button */}
           <div className="hidden md:flex items-center gap-4">
-            <Button variant="outline" size="sm">
-              <Phone className="h-4 w-4" />
-              Contact
-            </Button>
-            <Button variant="hero" size="sm">
-              <FileText className="h-4 w-4" />
-              Register Now
-            </Button>
+            {user ? (
+              <div className="flex items-center gap-4">
+                <span className="text-sm text-muted-foreground">
+                  Welcome, {user.user_metadata?.first_name || user.email}
+                </span>
+                <Button variant="outline" size="sm" onClick={signOut}>
+                  <LogOut className="h-4 w-4" />
+                  Sign Out
+                </Button>
+              </div>
+            ) : (
+              <>
+                <Button variant="outline" size="sm">
+                  <Phone className="h-4 w-4" />
+                  Contact
+                </Button>
+                <Link to="/auth">
+                  <Button variant="hero" size="sm">
+                    <FileText className="h-4 w-4" />
+                    Join Now
+                  </Button>
+                </Link>
+              </>
+            )}
           </div>
 
           {/* Mobile Menu Button */}
@@ -81,14 +100,25 @@ const Header = () => {
                 </a>
               ))}
               <div className="flex flex-col gap-3 pt-4 border-t border-border">
-                <Button variant="outline" size="sm">
-                  <Phone className="h-4 w-4" />
-                  Contact
-                </Button>
-                <Button variant="hero" size="sm">
-                  <FileText className="h-4 w-4" />
-                  Register Now
-                </Button>
+                {user ? (
+                  <Button variant="outline" className="w-full" onClick={signOut}>
+                    <LogOut className="h-4 w-4 mr-2" />
+                    Sign Out
+                  </Button>
+                ) : (
+                  <>
+                    <Button variant="outline" size="sm">
+                      <Phone className="h-4 w-4" />
+                      Contact
+                    </Button>
+                    <Link to="/auth">
+                      <Button variant="hero" size="sm">
+                        <FileText className="h-4 w-4" />
+                        Join Now
+                      </Button>
+                    </Link>
+                  </>
+                )}
               </div>
             </nav>
           </div>
