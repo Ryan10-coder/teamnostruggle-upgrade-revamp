@@ -62,6 +62,7 @@ const Registration = () => {
       };
 
       console.log('Registration data being sent:', registrationData);
+      console.log('Membership type value:', JSON.stringify(formData.membershipType));
 
       const { error } = await supabase
         .from('membership_registrations')
