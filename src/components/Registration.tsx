@@ -43,6 +43,17 @@ const Registration = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    // Validate membership type is selected
+    if (!formData.membershipType) {
+      toast({
+        variant: "destructive",
+        title: "Membership type required",
+        description: "Please select a membership type before submitting.",
+      });
+      return;
+    }
+
     setIsSubmitting(true);
 
     try {
@@ -260,7 +271,11 @@ const Registration = () => {
                 <div className="space-y-6">
                   <div>
                     <Label htmlFor="membershipType">Select Membership Type *</Label>
-                    <Select value={formData.membershipType} onValueChange={(value) => handleInputChange('membershipType', value)}>
+                    <Select 
+                      value={formData.membershipType} 
+                      onValueChange={(value) => handleInputChange('membershipType', value)}
+                      required
+                    >
                       <SelectTrigger>
                         <SelectValue placeholder="Choose your membership plan" />
                       </SelectTrigger>
@@ -270,6 +285,9 @@ const Registration = () => {
                         <SelectItem value="family">Family Membership - $75/month</SelectItem>
                       </SelectContent>
                     </Select>
+                    {!formData.membershipType && (
+                      <p className="text-sm text-destructive mt-1">Please select a membership type</p>
+                    )}
                   </div>
                   
                   <div className="bg-muted/50 p-4 rounded-lg">
@@ -304,7 +322,10 @@ const Registration = () => {
                     <ArrowRight className="h-4 w-4 ml-2" />
                   </Button>
                 ) : (
-                  <Button type="submit" disabled={isSubmitting}>
+                  <Button 
+                    type="submit" 
+                    disabled={isSubmitting || !formData.membershipType}
+                  >
                     {isSubmitting ? "Submitting..." : "Complete Registration"}
                   </Button>
                 )}
