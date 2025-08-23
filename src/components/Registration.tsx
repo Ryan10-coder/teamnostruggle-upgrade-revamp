@@ -47,10 +47,14 @@ const Registration = () => {
 
     try {
       const registrationData = {
-        ...formData,
         user_id: user?.id || null,
         first_name: formData.firstName,
         last_name: formData.lastName,
+        email: formData.email,
+        phone: formData.phone,
+        address: formData.address,
+        city: formData.city,
+        state: formData.state,
         zip_code: formData.zipCode,
         emergency_contact_name: formData.emergencyContactName,
         emergency_contact_phone: formData.emergencyContactPhone,
