@@ -61,9 +61,11 @@ const Registration = () => {
         membership_type: formData.membershipType
       };
 
+      console.log('Registration data being sent:', registrationData);
+
       const { error } = await supabase
         .from('membership_registrations')
-        .insert([registrationData]);
+        .insert(registrationData);
 
       if (error) throw error;
 
