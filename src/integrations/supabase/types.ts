@@ -172,6 +172,7 @@ export type Database = {
       }
       staff_registrations: {
         Row: {
+          assigned_area: string | null
           created_at: string
           email: string
           first_name: string
@@ -184,6 +185,7 @@ export type Database = {
           user_id: string | null
         }
         Insert: {
+          assigned_area?: string | null
           created_at?: string
           email: string
           first_name: string
@@ -196,6 +198,7 @@ export type Database = {
           user_id?: string | null
         }
         Update: {
+          assigned_area?: string | null
           created_at?: string
           email?: string
           first_name?: string
