@@ -4,10 +4,11 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
 import { useToast } from '@/hooks/use-toast';
-import { UserPlus, ArrowRight, ArrowLeft } from 'lucide-react';
+import { UserPlus, ArrowRight, ArrowLeft, Upload } from 'lucide-react';
 
 const Registration = () => {
   const [currentStep, setCurrentStep] = useState(1);
@@ -20,13 +21,18 @@ const Registration = () => {
     lastName: '',
     email: '',
     phone: '',
+    alternativePhone: '',
+    idNumber: '',
+    sex: '',
+    maritalStatus: '',
     address: '',
     city: '',
     state: '',
     zipCode: '',
     emergencyContactName: '',
     emergencyContactPhone: '',
-    membershipType: ''
+    membershipType: '',
+    profilePicture: null as File | null
   });
 
   const handleNext = () => {
@@ -57,19 +63,45 @@ const Registration = () => {
     setIsSubmitting(true);
 
     try {
+      let profilePictureUrl = null;
+
+      // Upload profile picture if provided
+      if (formData.profilePicture) {
+        const fileExt = formData.profilePicture.name.split('.').pop();
+        const fileName = `${user?.id || 'anonymous'}-${Date.now()}.${fileExt}`;
+        
+        const { error: uploadError } = await supabase.storage
+          .from('member-profiles')
+          .upload(fileName, formData.profilePicture);
+
+        if (uploadError) throw uploadError;
+
+        // Get the public URL
+        const { data } = supabase.storage
+          .from('member-profiles')
+          .getPublicUrl(fileName);
+        
+        profilePictureUrl = data.publicUrl;
+      }
+
       const registrationData = {
         user_id: user?.id || null,
         first_name: formData.firstName,
         last_name: formData.lastName,
         email: formData.email,
         phone: formData.phone,
+        alternative_phone: formData.alternativePhone || null,
+        id_number: formData.idNumber,
+        sex: formData.sex,
+        marital_status: formData.maritalStatus,
         address: formData.address,
         city: formData.city,
         state: formData.state,
         zip_code: formData.zipCode,
         emergency_contact_name: formData.emergencyContactName,
         emergency_contact_phone: formData.emergencyContactPhone,
-        membership_type: formData.membershipType
+        membership_type: formData.membershipType,
+        profile_picture_url: profilePictureUrl
       };
 
       console.log('Registration data being sent:', registrationData);
@@ -92,13 +124,18 @@ const Registration = () => {
         lastName: '',
         email: '',
         phone: '',
+        alternativePhone: '',
+        idNumber: '',
+        sex: '',
+        maritalStatus: '',
         address: '',
         city: '',
         state: '',
         zipCode: '',
         emergencyContactName: '',
         emergencyContactPhone: '',
-        membershipType: ''
+        membershipType: '',
+        profilePicture: null
       });
       setCurrentStep(1);
     } catch (error: any) {
@@ -190,6 +227,79 @@ const Registration = () => {
                       placeholder="(555) 123-4567"
                       required
                     />
+                  </div>
+                  <div>
+                    <Label htmlFor="alternativePhone">Alternative Phone Number</Label>
+                    <Input
+                      id="alternativePhone"
+                      type="tel"
+                      value={formData.alternativePhone}
+                      onChange={(e) => handleInputChange('alternativePhone', e.target.value)}
+                      placeholder="(555) 987-6543"
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="idNumber">ID Number *</Label>
+                    <Input
+                      id="idNumber"
+                      value={formData.idNumber}
+                      onChange={(e) => handleInputChange('idNumber', e.target.value)}
+                      placeholder="Government ID or passport number"
+                      required
+                    />
+                  </div>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                      <Label>Sex *</Label>
+                      <RadioGroup 
+                        value={formData.sex} 
+                        onValueChange={(value) => handleInputChange('sex', value)}
+                        className="flex flex-row space-x-4 mt-2"
+                      >
+                        <div className="flex items-center space-x-2">
+                          <RadioGroupItem value="Male" id="male" />
+                          <Label htmlFor="male">Male</Label>
+                        </div>
+                        <div className="flex items-center space-x-2">
+                          <RadioGroupItem value="Female" id="female" />
+                          <Label htmlFor="female">Female</Label>
+                        </div>
+                      </RadioGroup>
+                    </div>
+                    <div>
+                      <Label htmlFor="maritalStatus">Marital Status *</Label>
+                      <Select 
+                        value={formData.maritalStatus} 
+                        onValueChange={(value) => handleInputChange('maritalStatus', value)}
+                      >
+                        <SelectTrigger>
+                          <SelectValue placeholder="Select status" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="Single">Single</SelectItem>
+                          <SelectItem value="Married">Married</SelectItem>
+                          <SelectItem value="Divorced">Divorced</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                  </div>
+                  <div>
+                    <Label htmlFor="profilePicture">Profile Picture</Label>
+                    <div className="mt-2">
+                      <Input
+                        id="profilePicture"
+                        type="file"
+                        accept="image/*"
+                        onChange={(e) => {
+                          const file = e.target.files?.[0] || null;
+                          setFormData(prev => ({ ...prev, profilePicture: file }));
+                        }}
+                        className="cursor-pointer"
+                      />
+                      <p className="text-sm text-muted-foreground mt-1">
+                        Upload a clear photo of yourself (JPG, PNG, max 5MB)
+                      </p>
+                    </div>
                   </div>
                 </div>
               )}

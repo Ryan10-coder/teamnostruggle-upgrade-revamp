@@ -50,6 +50,7 @@ export type Database = {
       membership_registrations: {
         Row: {
           address: string
+          alternative_phone: string | null
           city: string
           created_at: string
           email: string
@@ -57,11 +58,15 @@ export type Database = {
           emergency_contact_phone: string
           first_name: string
           id: string
+          id_number: string | null
           last_name: string
+          marital_status: string | null
           membership_type: string
           payment_status: string | null
           phone: string
+          profile_picture_url: string | null
           registration_status: string | null
+          sex: string | null
           state: string
           updated_at: string
           user_id: string | null
@@ -69,6 +74,7 @@ export type Database = {
         }
         Insert: {
           address: string
+          alternative_phone?: string | null
           city: string
           created_at?: string
           email: string
@@ -76,11 +82,15 @@ export type Database = {
           emergency_contact_phone: string
           first_name: string
           id?: string
+          id_number?: string | null
           last_name: string
+          marital_status?: string | null
           membership_type: string
           payment_status?: string | null
           phone: string
+          profile_picture_url?: string | null
           registration_status?: string | null
+          sex?: string | null
           state: string
           updated_at?: string
           user_id?: string | null
@@ -88,6 +98,7 @@ export type Database = {
         }
         Update: {
           address?: string
+          alternative_phone?: string | null
           city?: string
           created_at?: string
           email?: string
@@ -95,11 +106,15 @@ export type Database = {
           emergency_contact_phone?: string
           first_name?: string
           id?: string
+          id_number?: string | null
           last_name?: string
+          marital_status?: string | null
           membership_type?: string
           payment_status?: string | null
           phone?: string
+          profile_picture_url?: string | null
           registration_status?: string | null
+          sex?: string | null
           state?: string
           updated_at?: string
           user_id?: string | null
