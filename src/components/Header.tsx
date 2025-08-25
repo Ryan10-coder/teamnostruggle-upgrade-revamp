@@ -84,6 +84,11 @@ const Header = () => {
                   Contact
                 </Button>
                 <Link to="/auth">
+                  <Button variant="outline" size="sm">
+                    Sign In
+                  </Button>
+                </Link>
+                <Link to="/auth">
                   <Button variant="hero" size="sm">
                     <FileText className="h-4 w-4" />
                     Join Now
@@ -153,6 +158,11 @@ const Header = () => {
                       <Phone className="h-4 w-4" />
                       Contact
                     </Button>
+                    <Link to="/auth">
+                      <Button variant="outline" className="w-full">
+                        Sign In
+                      </Button>
+                    </Link>
                     <Link to="/auth">
                       <Button variant="hero" size="sm">
                         <FileText className="h-4 w-4" />
