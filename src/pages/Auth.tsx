@@ -30,24 +30,38 @@ const Auth = () => {
     }
   }, [user, navigate]);
 
+  // Clean up auth state function
+  const cleanupAuthState = () => {
+    Object.keys(localStorage).forEach((key) => {
+      if (key.startsWith('supabase.auth.') || key.includes('sb-')) {
+        localStorage.removeItem(key);
+      }
+    });
+  };
+
   const handleSignIn = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
     
     try {
+      // Clean up any existing auth state first
+      cleanupAuthState();
+      
       const { error } = await signIn(signInData.email, signInData.password);
       
       if (error) {
         toast({
           variant: "destructive",
           title: "Sign in failed",
-          description: error.message,
+          description: error.message + " Try clearing your browser cache or resetting your password.",
         });
       } else {
         toast({
           title: "Welcome back!",
           description: "You've been signed in successfully.",
         });
+        // Force page refresh for clean state
+        window.location.href = '/';
       }
     } catch (error) {
       toast({
@@ -153,6 +167,21 @@ const Auth = () => {
                   <Button type="submit" className="w-full" disabled={isLoading}>
                     {isLoading ? "Signing in..." : "Sign In"}
                   </Button>
+                  <div className="text-center">
+                    <button
+                      type="button"
+                      className="text-sm text-muted-foreground hover:text-primary underline"
+                      onClick={() => {
+                        cleanupAuthState();
+                        toast({
+                          title: "Cache cleared",
+                          description: "Try signing in again now.",
+                        });
+                      }}
+                    >
+                      Clear browser cache & try again
+                    </button>
+                  </div>
                 </form>
               </TabsContent>
               
