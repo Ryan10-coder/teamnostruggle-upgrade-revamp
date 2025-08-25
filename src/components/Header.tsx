@@ -2,11 +2,13 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { useAuth } from '@/hooks/useAuth';
-import { Menu, X, Users, Phone, FileText, LogOut } from 'lucide-react';
+import { useAreaCoordinator } from '@/hooks/useAreaCoordinator';
+import { Menu, X, Users, Phone, FileText, LogOut, Shield } from 'lucide-react';
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const { user, signOut } = useAuth();
+  const { isAreaCoordinator } = useAreaCoordinator();
 
   const navigation = [
     { name: 'About Us', href: '#about' },
@@ -59,6 +61,14 @@ const Header = () => {
           <div className="hidden md:flex items-center gap-4">
             {user ? (
               <div className="flex items-center gap-4">
+                {isAreaCoordinator && (
+                  <Link to="/area-coordinator">
+                    <Button variant="outline" size="sm">
+                      <Shield className="h-4 w-4" />
+                      Area Portal
+                    </Button>
+                  </Link>
+                )}
                 <span className="text-sm text-muted-foreground">
                   Welcome, {user.user_metadata?.first_name || user.email}
                 </span>
@@ -123,10 +133,20 @@ const Header = () => {
               ))}
               <div className="flex flex-col gap-3 pt-4 border-t border-border">
                 {user ? (
-                  <Button variant="outline" className="w-full" onClick={signOut}>
-                    <LogOut className="h-4 w-4 mr-2" />
-                    Sign Out
-                  </Button>
+                  <>
+                    {isAreaCoordinator && (
+                      <Link to="/area-coordinator" onClick={() => setIsMenuOpen(false)}>
+                        <Button variant="outline" className="w-full">
+                          <Shield className="h-4 w-4 mr-2" />
+                          Area Portal
+                        </Button>
+                      </Link>
+                    )}
+                    <Button variant="outline" className="w-full" onClick={signOut}>
+                      <LogOut className="h-4 w-4 mr-2" />
+                      Sign Out
+                    </Button>
+                  </>
                 ) : (
                   <>
                     <Button variant="outline" size="sm">
