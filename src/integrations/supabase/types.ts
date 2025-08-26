@@ -178,8 +178,8 @@ export type Database = {
           first_name: string
           id: string
           last_name: string
+          pending: string | null
           phone: string
-          registration_status: string | null
           staff_role: string
           updated_at: string
           user_id: string | null
@@ -191,8 +191,8 @@ export type Database = {
           first_name: string
           id?: string
           last_name: string
+          pending?: string | null
           phone: string
-          registration_status?: string | null
           staff_role: string
           updated_at?: string
           user_id?: string | null
@@ -204,8 +204,8 @@ export type Database = {
           first_name?: string
           id?: string
           last_name?: string
+          pending?: string | null
           phone?: string
-          registration_status?: string | null
           staff_role?: string
           updated_at?: string
           user_id?: string | null
