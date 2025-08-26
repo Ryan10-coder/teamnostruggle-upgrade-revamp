@@ -6,7 +6,7 @@ interface AreaCoordinatorData {
   id: string;
   staff_role: string;
   assigned_area: string | null;
-  pending: boolean;
+  pending: string;
 }
 
 export const useAreaCoordinator = () => {
@@ -28,7 +28,7 @@ export const useAreaCoordinator = () => {
           .select('id, staff_role, assigned_area, pending')
           .eq('user_id', user.id)
           .eq('staff_role', 'Area Coordinator')
-          .eq('pending', false)
+          .eq('pending', 'approved')
           .maybeSingle();
 
         if (error) {
