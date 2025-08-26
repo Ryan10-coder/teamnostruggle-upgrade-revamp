@@ -6,7 +6,7 @@ interface AreaCoordinatorData {
   id: string;
   staff_role: string;
   assigned_area: string | null;
-  registration_status: string;
+  pending: boolean;
 }
 
 export const useAreaCoordinator = () => {
@@ -25,10 +25,10 @@ export const useAreaCoordinator = () => {
       try {
         const { data, error } = await supabase
           .from('staff_registrations')
-          .select('id, staff_role, assigned_area, registration_status')
+          .select('id, staff_role, assigned_area, pending')
           .eq('user_id', user.id)
           .eq('staff_role', 'Area Coordinator')
-          .eq('registration_status', 'approved')
+          .eq('pending', false)
           .maybeSingle();
 
         if (error) {
